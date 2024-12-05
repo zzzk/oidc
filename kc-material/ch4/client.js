@@ -2,6 +2,9 @@
 /* OpenID Connect functions */
 /****************************/
 
+//enable PKCE
+var enable_PKCE = false;
+
 // Load the OpenID Provider Configuration
 function loadDiscovery() {
     var issuer = getInput('input-issuer');
@@ -28,11 +31,16 @@ async function generateAuthenticationRequest() {
     var maxAge = getInput('input-maxage');
     var loginHint = getInput('input-loginhint');
     
-    const codeVerifier = generateCodeVerifier();
-    const codeChallenge = await generateCodeChallenge(codeVerifier);
+    if( enable_PKCE ) {
+        const codeVerifier = generateCodeVerifier();
+        const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-    console.log(codeVerifier);
-    console.log(codeChallenge);
+
+        console.log("the secred codeVerifier: " + codeVerifier);
+        console.log("the hashed codeChallance: " + codeChallenge);
+    }
+
+
 
     var authenticationInput = {
         clientId: clientId,
@@ -46,8 +54,8 @@ async function generateAuthenticationRequest() {
     req += '?client_id=' + clientId;
     req += '&response_type=code';
     req += '&redirect_uri=' + document.location.href.split('?')[0];
-    req += `&code_challenge=${codeChallenge}`;
-    req += '&code_challenge_method=S256';
+    req +=  enable_PKCE  ? `&code_challenge=${codeChallenge}` : "";
+    req +=  enable_PKCE ? '&code_challenge_method=S256' : "";
     
     if ('' !== scope) {
         req += '&scope=' + scope;
