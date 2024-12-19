@@ -2,10 +2,12 @@
   "name": "keycloak-example-app",
   "version": "0.0.1",
   "scripts": {
+    "dev": "nodemon app.js",
     "start": "node app.js"
   },
   "dependencies": {
     "express": "^4.21.1",
+    "nodemon": "^3.1.9",
     "start": "^5.1.0",
     "string-replace-middleware": "^1.0.2"
   }
